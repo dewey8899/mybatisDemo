@@ -14,5 +14,4 @@ public interface PriceMapper {
     List<PriceVo> getPriceList(@Param("condition") CustomerProfileVo vo);
     List<CustomerProfileVo> getCustomerList(@Param("condition") CustomerProfileVo vo);
     int insertSelectiveBatch(List<PriceVo> records);
-    sout
 }
