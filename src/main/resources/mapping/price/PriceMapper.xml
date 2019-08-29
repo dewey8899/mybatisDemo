@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.mapper.price.PriceMapper">
+    <resultMap id="BaseResultMap" type="com.system.vo.price.PriceVo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="entity_code" jdbcType="VARCHAR" property="entityCode"/>
+        <result column="entity_sub_code" jdbcType="VARCHAR" property="entitySubCode"/>
+        <result column="relation_entity_code" jdbcType="VARCHAR" property="relationEntityCode"/>
+        <result column="relation_entity_sub_code" jdbcType="VARCHAR" property="relationEntitySubCode"/>
+        <result column="price_batch_code" jdbcType="VARCHAR" property="priceBatchCode"/>
+        <result column="product_code" jdbcType="VARCHAR" property="productCode"/>
+        <result column="material_number" jdbcType="VARCHAR" property="materialNumber"/>
+        <result column="tax_excluded_price" jdbcType="DECIMAL" property="taxExcludedPrice"/>
+        <result column="tax_included_price" jdbcType="DECIMAL" property="taxIncludedPrice"/>
+        <result column="tax_price" jdbcType="DECIMAL" property="taxPrice"/>
+        <result column="start_time" jdbcType="DATE" property="startTime"/>
+        <result column="end_time" jdbcType="DATE" property="endTime"/>
+        <result column="latest_flg" jdbcType="VARCHAR" property="latestFlg"/>
+        <result column="sys_created_time" jdbcType="TIMESTAMP" property="sysCreatedTime"/>
+        <result column="sys_created_operator_name" jdbcType="VARCHAR" property="sysCreatedOperatorName"/>
+        <result column="sys_updated_time" jdbcType="TIMESTAMP" property="sysUpdatedTime"/>
+        <result column="sys_updated_operator_name" jdbcType="VARCHAR" property="sysUpdatedOperatorName"/>
+        <result column="sys_del_flg" jdbcType="VARCHAR" property="sysDelFlg"/>
+    </resultMap>
+    <resultMap id="CustomerMap" type="com.system.vo.price.CustomerProfileVo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="entity_code" jdbcType="VARCHAR" property="entityCode"/>
+        <result column="entity_sub_code" jdbcType="VARCHAR" property="entitySubCode"/>
+        <result column="entity_internal_code" jdbcType="VARCHAR" property="entityInternalCode"/>
+    </resultMap>
+
+    <select id="getPriceList" parameterType="com.system.vo.price.PriceVo" resultMap="BaseResultMap">
+        SELECT * from tb_product_price WHERE 1=1 and
+         latest_flg = '1' and sys_del_flg = '0'
+        <if test="condition.entitySubCode != null ">
+            and entity_sub_code = #{condition.entitySubCode}
+        </if>
+    </select>
+
+    <select id="getCustomerList" resultMap="CustomerMap">
+        SELECT * from tb_entity_customer where 1=1
+        <if test="condition.id != null ">
+           and  id &gt; #{condition.id}
+        </if>
+    </select>
+    <insert id="insertSelectiveBatch" parameterType="java.util.List">
+        insert into tb_product_price
+        (<foreach collection="list" index="index" item="item" separator="">
+        <if test="index == 0">
+            <trim suffix="" suffixOverrides=",">
+                <if test="item.id != null">
+                    id,
+                </if>
+                <if test="item.entityCode != null">
+                    entity_code,
+                </if>
+                <if test="item.entitySubCode != null">
+                    entity_sub_code,
+                </if>
+                <if test="item.relationEntityCode != null">
+                    relation_entity_code,
+                </if>
+                <if test="item.relationEntitySubCode != null">
+                    relation_entity_sub_code,
+                </if>
+                <if test="item.priceBatchCode != null">
+                    price_batch_code,
+                </if>
+                <if test="item.productCode != null">
+                    product_code,
+                </if>
+                <if test="item.materialNumber != null">
+                    material_number,
+                </if>
+                <if test="item.taxExcludedPrice != null">
+                    tax_excluded_price,
+                </if>
+                <if test="item.taxIncludedPrice != null">
+                    tax_included_price,
+                </if>
+                <if test="item.taxPrice != null">
+                    tax_price,
+                </if>
+                <if test="item.startTime != null">
+                    start_time,
+                </if>
+                <if test="item.endTime != null">
+                    end_time,
+                </if>
+                <if test="item.latestFlg != null">
+                    latest_flg,
+                </if>
+                <if test="item.sysCreatedTime != null">
+                    sys_created_time,
+                </if>
+                <if test="item.sysCreatedOperatorName != null">
+                    sys_created_operator_name,
+                </if>
+                <if test="item.sysUpdatedTime != null">
+                    sys_updated_time,
+                </if>
+                <if test="item.sysUpdatedOperatorName != null">
+                    sys_updated_operator_name,
+                </if>
+                <if test="item.sysDelFlg != null">
+                    sys_del_flg,
+                </if>
+            </trim>
+        </if>
+    </foreach>)VALUES<foreach collection="list" index="index" item="item" separator=",">(<trim suffix="" suffixOverrides=",">
+        <if test="item.id != null">
+            #{item.id,jdbcType=BIGINT},
+        </if>
+        <if test="item.entityCode != null">
+            #{item.entityCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.entitySubCode != null">
+            #{item.entitySubCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.relationEntityCode != null">
+            #{item.relationEntityCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.relationEntitySubCode != null">
+            #{item.relationEntitySubCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.priceBatchCode != null">
+            #{item.priceBatchCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.productCode != null">
+            #{item.productCode,jdbcType=VARCHAR},
+        </if>
+        <if test="item.materialNumber != null">
+            #{item.materialNumber,jdbcType=VARCHAR},
+        </if>
+        <if test="item.taxExcludedPrice != null">
+            #{item.taxExcludedPrice,jdbcType=DECIMAL},
+        </if>
+        <if test="item.taxIncludedPrice != null">
+            #{item.taxIncludedPrice,jdbcType=DECIMAL},
+        </if>
+        <if test="item.taxPrice != null">
+            #{item.taxPrice,jdbcType=DECIMAL},
+        </if>
+        <if test="item.startTime != null">
+            #{item.startTime,jdbcType=DATE},
+        </if>
+        <if test="item.endTime != null">
+            #{item.endTime,jdbcType=DATE},
+        </if>
+        <if test="item.latestFlg != null">
+            #{item.latestFlg,jdbcType=VARCHAR},
+        </if>
+        <if test="item.sysCreatedTime != null">
+            #{item.sysCreatedTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.sysCreatedOperatorName != null">
+            #{item.sysCreatedOperatorName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.sysUpdatedTime != null">
+            #{item.sysUpdatedTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.sysUpdatedOperatorName != null">
+            #{item.sysUpdatedOperatorName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.sysDelFlg != null">
+            #{item.sysDelFlg,jdbcType=VARCHAR},
+        </if>
+    </trim>)</foreach>
+    </insert>
+</mapper>

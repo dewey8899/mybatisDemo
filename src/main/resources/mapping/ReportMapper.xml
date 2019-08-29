@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.mapper.ReportMapper">
+    <resultMap id="BaseResultMap" type="com.system.entity.TBReport">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="agency_code" jdbcType="VARCHAR" property="agencyCode" />
+        <result column="agency_name" jdbcType="VARCHAR" property="agencyName" />
+        <result column="service_code" jdbcType="VARCHAR" property="serviceCode" />
+        <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
+        <result column="brand_name" jdbcType="VARCHAR" property="brandName" />
+        <result column="material_number" jdbcType="VARCHAR" property="materialNumber" />
+        <result column="product_name" jdbcType="VARCHAR" property="productName" />
+        <result column="delivery_quantity" jdbcType="INTEGER" property="deliveryQuantity"/>
+        <result column="delivery_agency_amount" jdbcType="DECIMAL" property="deliveryAgencyAmount"/>
+        <result column="replenish_quantity" jdbcType="INTEGER" property="replenishQuantity"/>
+        <result column="replenish_agency_amount" jdbcType="DECIMAL" property="replenishAgencyAmount"/>
+    </resultMap>
+
+    <select id="getList" parameterType="com.system.entity.TBReport" resultMap="BaseResultMap">
+        select * from tb_report where 1=1
+        <if test="condition.serviceCode != null ">
+            and service_code = #{condition.serviceCode}
+        </if>
+        <if test="condition.brandName != null ">
+            and brand_name = #{condition.brandName}
+        </if>
+    </select>
+</mapper>

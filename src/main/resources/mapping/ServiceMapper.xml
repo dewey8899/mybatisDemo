@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.mapper.ServiceMapper">
+    <resultMap id="BaseResultMap" type="com.system.entity.TBSservice">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="role_mark" jdbcType="VARCHAR" property="roleMark" />
+        <result column="service_code" jdbcType="VARCHAR" property="serviceCode" />
+    </resultMap>
+
+    <select id="getList" parameterType="com.system.entity.TBSservice" resultMap="BaseResultMap">
+        select * from tb_service where 1=1
+        <if test="condition.id != null ">
+            and id = #{condition.id}
+        </if>
+        <if test="condition.serviceCode != null ">
+            and service_code = #{condition.serviceCode}
+        </if>
+        <if test="condition.roleMark != null ">
+            and role_mark = #{condition.roleMark}
+        </if>
+    </select>
+</mapper>
