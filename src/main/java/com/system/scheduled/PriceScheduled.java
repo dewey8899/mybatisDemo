@@ -66,8 +66,8 @@ public class PriceScheduled {
             CustomerProfileVo vo1 = customerMap.get(internal_12);
             CustomerProfileVo vo2 = customerMap.get(internal_13);
             //如果vo1不是空，则执行lambda表达式v ->updatePrice(allVos, priceBatchCode, entitySubCode, v)
+            //表达式中的 v 代表判断的对象  vo1 或者 vo2
             Optional.ofNullable(vo1).ifPresent(v ->updatePrice(allVos, priceBatchCode, entitySubCode, v));
-            //如果vo2不是空，则执行lambda表达式v ->updatePrice(allVos, priceBatchCode, entitySubCode, v)
             Optional.ofNullable(vo2).ifPresent(v -> updatePrice(allVos, priceBatchCode, entitySubCode, v));
         }
         String fileName = String.format("价格数据.xlsx");
