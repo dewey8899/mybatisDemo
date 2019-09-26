@@ -1,10 +1,15 @@
 package test;
 
 import com.system.exception.BusinessException;
+import com.system.utils.BigDecimalUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -25,8 +30,11 @@ public class Lambda {
         Optional.ofNullable(user2).ifPresent(na->{
             System.out.println(na+" - > user2");
         });
-
-
+        BigDecimal multiply = BigDecimalUtils.multiply(new BigDecimal("100"), new BigDecimal("501.81"));
+        BigDecimal deliveryPriceRatio = BigDecimalUtils.divide(multiply, new BigDecimal("526.21"), 2, BigDecimal.ROUND_HALF_UP);
+        System.out.println(deliveryPriceRatio);
+        System.out.println(deliveryPriceRatio.toString()+"%");
+        System.out.println(new BigDecimal("0.00").compareTo(new BigDecimal("0.00000")) == 0);
     }
 
     @Test
@@ -41,12 +49,18 @@ public class Lambda {
     }
 
     @Test
-    public void givenPresentValue_whenCompare_thenOk(){
+    public void orElse(){
+        User user =null;
         User user2=new User("john@gmail.com","1234");
         log.info("Using orElse");
-        User result = Optional.ofNullable(user2).orElse(createNewUser());
+        User result = Optional.ofNullable(user).orElse(new User("dewey","dewey"));
+        User result2 = Optional.ofNullable(user2).orElse(new User("dewey","dewey"));
+        User result3 = Optional.ofNullable(user2).orElse(createNewUser());
+        System.out.println(result);
+        System.out.println(result2);
         log.info("Using orElseGet");
-        User result2 = Optional.ofNullable(user2).orElseGet(()->createNewUser());
+        User result4 = Optional.ofNullable(user2).orElseGet(()->createNewUser());
+
     }
 
     @Test
@@ -57,6 +71,35 @@ public class Lambda {
     private User createNewUser(){
         log.info("creating  New  User..");
         return new User();
+    }
+    @Test
+    public void orMethod(){
+    Integer value1 = null;
+    Integer value2 = 10;
+    Optional<Integer> a = Optional.ofNullable(value1);
+    Optional<Integer> b = Optional.of(value2);
+    System.out.println(b.orElse(getDefaultValue())); // 调用getDefaultValue
+    System.out.println(a.orElse(getDefaultValue())); // 调用getDefaultValue
+    System.out.println(b.orElseGet(() -> getDefaultValue())); // 不调用getDefaultValue
+    System.out.println(a.orElseGet(() -> getDefaultValue())); // 调用getDefaultValue
+}
+    @Test
+    public void lambda(){
+        List car=new ArrayList();
+        car.add("a");
+        car.add("b");
+        car.forEach(s->{
+            System.out.println(s);
+        });
+
+        Map<String,String> map = null;
+        map.forEach((k,v)->{
+            System.out.println(k);
+        });
+    }
+
+    public static Integer getDefaultValue() {
+        return new Integer(0);
     }
 }
 @Data
