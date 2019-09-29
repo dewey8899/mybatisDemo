@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 public class Thread_Pool_FutureTask_MutiCompute {
     public static void main(String args[]){
 
-        Thread_Pool_FutureTask_MutiCompute thread_Pool_FutureTask_MutiCompute=new Thread_Pool_FutureTask_MutiCompute();
+        Thread_Pool_FutureTask_MutiCompute thread_Pool_FutureTask_MutiCompute = new Thread_Pool_FutureTask_MutiCompute();
         // 创建任务集合
         List<FutureTask<Integer>> taskList = new ArrayList<>();
         // 创建线程池
@@ -23,18 +23,14 @@ public class Thread_Pool_FutureTask_MutiCompute {
             // 提交给线程池执行任务，也可以通过exec.invokeAll(taskList)一次性提交所有任务;
             exec.submit(ft);
         }
-
         System.out.println("所有计算任务提交完毕, 主线程接着干其他事情！");
-
         // 开始统计各计算线程计算结果
         Integer totalResult = 0;
         for (FutureTask<Integer> ft : taskList) {
             try {
                 //FutureTask的get方法会自动阻塞,直到获取计算结果为止
                 totalResult = totalResult + ft.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
@@ -43,6 +39,7 @@ public class Thread_Pool_FutureTask_MutiCompute {
         exec.shutdown();
         System.out.println("多任务计算后的总结果是:" + totalResult);
     }
+
     private class ComputeTask implements Callable<Integer> {
 
         private Integer result = 0;
