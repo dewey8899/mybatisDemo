@@ -35,5 +35,7 @@ public class StreamMapGroupBy {
                 .collect(Collectors.groupingBy(p->p.getName()+"|"+p.getQty()+"|"+p.getPrice(),
                         CollectorsUtils.summingBigDecimal(Item::getPrice)));
         System.out.println(associationSum);
+        Short i = 1;
+        System.out.println(i.equals((short)1));
     }
 }
