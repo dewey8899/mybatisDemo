@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.mapper.ReportOemProductDifferenceMapper">
+    <resultMap id="BaseResultMap" type="com.system.vo.tb_report_oem_report_difference.ReportOemProductDifferenceSearchOutDto">
+        <result column="material_number" jdbcType="VARCHAR" property="materialNumber"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="service_business_entity_internal_code" jdbcType="VARCHAR" property="serviceBusinessEntityInternalCode"/>
+        <result column="general_agency_entity_internal_code" jdbcType="VARCHAR" property="generalAgencyEntityInternalCode"/>
+        <result column="service_business_entity_company_short_name" jdbcType="VARCHAR" property="serviceBusinessEntityCompanyShortName"/>
+        <result column="delivery_quantity" jdbcType="INTEGER" property="deliveryQuantity"/>
+        <result column="task_order_replenishment_account_rule_type" jdbcType="VARCHAR" property="taskOrderReplenishmentAccountRuleType"/>
+        <result column="delivery_service_business_tax_excluded_price" jdbcType="DECIMAL" property="deliveryServiceBusinessTaxExcludedPrice"/>
+        <result column="delivery_service_business_tax_excluded_amount" jdbcType="DECIMAL" property="deliveryServiceBusinessTaxExcludedAmount"/>
+        <result column="delivery_general_agency_tax_excluded_price" jdbcType="DECIMAL" property="deliveryGeneralAgencyTaxExcludedPrice"/>
+        <result column="delivery_general_agency_tax_excluded_amount" jdbcType="DECIMAL" property="deliveryGeneralAgencyTaxExcludedAmount"/>
+        <result column="replenish_quantity" jdbcType="INTEGER" property="replenishQuantity"/>
+        <result column="replenish_service_business_tax_excluded_price" jdbcType="DECIMAL" property="replenishServiceBusinessTaxExcludedPrice"/>
+        <result column="replenish_service_business_tax_excluded_amount" jdbcType="DECIMAL" property="replenishServiceBusinessTaxExcludedAmount"/>
+        <result column="replenish_general_agency_tax_excluded_price" jdbcType="DECIMAL" property="replenishGeneralAgencyTaxExcludedPrice"/>
+        <result column="replenish_general_agency_tax_excluded_amount" jdbcType="DECIMAL" property="replenishGeneralAgencyTaxExcludedAmount"/>
+        <result column="start_time" jdbcType="VARCHAR" property="startDate"/>
+        <result column="end_time" jdbcType="VARCHAR" property="endDate"/>
+        <result column="date_type" jdbcType="VARCHAR" property="dateType"/>
+    </resultMap>
+    <select id="search" parameterType="map" resultMap="BaseResultMap">
+        SELECT '新规则' AS task_order_replenishment_account_rule_type ,general_agency_entity_internal_code,
+               t1.service_business_entity_internal_code,service_business_entity_company_short_name,
+               t1.material_number as material_number, t1.product_name as product_name,
+               0 as delivery_service_business_tax_excluded_price, 0 as delivery_quantity,
+               round(sum(t1.quantity * t1.service_business_tax_excluded_price), 2) as delivery_service_business_tax_excluded_amount,
+               0 as delivery_general_agency_tax_excluded_price,
+               round(sum(t1.quantity * t1.general_agency_tax_excluded_price), 2) as delivery_general_agency_tax_excluded_amount
+        FROM tb_report_oem_product_difference t1
+        WHERE  t1.order_type IN ( '配送任务订单', '价格调整单' ) AND t1.sys_del_flg = '0'  and t1.quantity > 0
+        GROUP BY t1.service_business_entity_internal_code,t1.service_business_entity_company_short_name,general_agency_entity_internal_code,
+                 t1.material_number,product_name,t1.task_order_replenishment_account_rule_type
+        ORDER BY t1.service_business_entity_internal_code
+
+    </select>
+    <select id="listDeliveries" parameterType="map" resultMap="BaseResultMap">
+        SELECT general_agency_entity_internal_code,service_business_entity_internal_code,service_business_entity_company_short_name,
+               material_number, product_name,
+               '新规则' AS task_order_replenishment_account_rule_type ,
+               sum(quantity) as delivery_quantity
+        FROM tb_report_oem_product_difference t1
+        WHERE order_type ='配送任务订单'  AND t1.sys_del_flg = '0'  and t1.quantity > 0 and t1.task_order_replenishment_account_rule_type = 2
+        GROUP BY t1.service_business_entity_internal_code,t1.service_business_entity_company_short_name,general_agency_entity_internal_code,
+                 t1.material_number,product_name,task_order_replenishment_account_rule_type
+        ORDER BY t1.service_business_entity_internal_code
+    </select>
+    <select id="listReplenishes" parameterType="map" resultMap="BaseResultMap">
+
+
+        SELECT general_agency_entity_internal_code,t1.service_business_entity_internal_code,sum(t1.quantity) as replenish_quantity ,
+               t1.service_business_entity_company_short_name, material_number , product_name ,
+               CASE WHEN sum(quantity) = 0 THEN 0 ELSE round(SUM(quantity * service_business_tax_excluded_price) / SUM(quantity), 2)
+                   END as replenish_service_business_tax_excluded_price, round(sum(quantity * service_business_tax_excluded_price), 2) as replenish_service_business_tax_excluded_amount,
+               CASE WHEN sum(quantity) = 0 THEN 0 ELSE round(SUM(quantity * general_agency_tax_excluded_price)/ sum(quantity), 2)
+                   END as replenish_general_agency_tax_excluded_price, round(sum(quantity * general_agency_tax_excluded_price), 2) as replenish_general_agency_tax_excluded_amount,
+               '新规则' AS task_order_replenishment_account_rule_type
+        FROM tb_report_oem_product_difference t1
+        WHERE order_type IN ( '补货订单', '站点送货订单' ) and sys_del_flg = '0' and t1.task_order_replenishment_account_rule_type = 2 and t1.quantity > 0
+        GROUP BY t1.service_business_entity_internal_code,t1.service_business_entity_company_short_name,general_agency_entity_internal_code
+               ,t1.material_number,product_name ,t1.task_order_replenishment_account_rule_type ,general_agency_entity_internal_code
+        ORDER BY general_agency_entity_internal_code, t1.service_business_entity_internal_code
+
+    </select>
+    <select id="listDates" parameterType="map" resultMap="BaseResultMap">
+        SELECT  MIN(dt.DATE_ID) as start_time,MAX(dt.DATE_ID) as end_time from tb_date dt
+        WHERE <include refid="byStartEndDate"/> IN
+        <foreach collection="list" item="dateType" index="index" open="(" close=")" separator=",">
+            #{dateType}
+        </foreach>
+        GROUP BY <include refid="byStartEndDate"/>
+    </select>
+    <sql id="groupByDate">
+        <if test="param.queryFlag == 'year'">
+            c.YEAR_ID
+        </if>
+        <if test="param.queryFlag == 'halfYear'">
+            c.HALFYEAR_NAME
+        </if>
+        <if test="param.queryFlag == 'quarter'">
+            c.QUARTER_NAME
+        </if>
+        <if test="param.queryFlag == 'month'">
+            c.YEAR_MONTH_ID
+        </if>
+        <if test="param.queryFlag == 'week'">
+            c.YEAR_WEEK_ID
+        </if>
+    </sql>
+    <sql id="byStartEndDate">
+        <if test="param.queryFlag == 'year'">
+            dt.YEAR_ID
+        </if>
+        <if test="param.queryFlag == 'halfYear'">
+            dt.HALFYEAR_NAME
+        </if>
+        <if test="param.queryFlag == 'quarter'">
+            dt.QUARTER_NAME
+        </if>
+        <if test="param.queryFlag == 'month'">
+            dt.YEAR_MONTH_ID
+        </if>
+        <if test="param.queryFlag == 'week'">
+            dt.YEAR_WEEK_ID
+        </if>
+    </sql>
+    <sql id="condition">
+        <if test="param.startDateStr != null and param.endDateStr != null ">
+            <![CDATA[and t1.create_date >= #{param.startDateStr} and t1.create_date <= #{param.endDateStr} ]]>
+        </if>
+        <if test="param.generalAgencyEntityInternalCode != null and param.generalAgencyEntityInternalCode != ''">
+            and general_agency_entity_internal_code = #{param.generalAgencyEntityInternalCode}
+        </if>
+        <if test="param.generalAgencyEntityCompanyShortName != null and param.generalAgencyEntityCompanyShortName != ''">
+            and general_agency_entity_company_short_name like CONCAT('%',#{param.generalAgencyEntityCompanyShortName},'%')
+        </if>
+        <if test="param.serviceBusinessEntityInternalCode != null and param.serviceBusinessEntityInternalCode != ''">
+            and service_business_entity_internal_code = #{param.serviceBusinessEntityInternalCode}
+        </if>
+
+        <if test="param.serviceBusinessEntityCompanyShortName != null and param.serviceBusinessEntityCompanyShortName != ''">
+            and service_business_entity_company_short_name like CONCAT('%',#{param.serviceBusinessEntityCompanyShortName},'%')
+        </if>
+        <if test="param.manufacturerBrandNameEn != null and param.manufacturerBrandNameEn != ''">
+            and (manufacturer_brand_name_zh LIKE CONCAT('%',#{param.manufacturerBrandNameEn},'%')
+            OR manufacturer_brand_name_en LIKE CONCAT('%',#{param.manufacturerBrandNameEn},'%') )
+        </if>
+        <if test="param.productName != null and param.productName != ''">
+            and product_name LIKE CONCAT('%',#{param.productName},'%')
+        </if>
+        <if test="param.materialNumber != null and param.materialNumber != ''">
+            and t1.material_number  = #{param.materialNumber}
+        </if>
+    </sql>
+</mapper>

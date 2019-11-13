@@ -1,13 +1,7 @@
 package com.system.scheduled;
 
-import com.system.entity.TBReport;
-import com.system.entity.TBSservice;
-import com.system.mapper.ServiceMapper;
 import com.system.mapper.price.PriceMapper;
-import com.system.service.ReportService;
-import com.system.utils.BigDecimalUtils;
 import com.system.utils.excel.ExcelUtils;
-import com.system.vo.ReportExportOutVo;
 import com.system.vo.price.CustomerProfileVo;
 import com.system.vo.price.PriceExportOutVo;
 import com.system.vo.price.PriceVo;
@@ -22,11 +16,9 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +39,7 @@ public class PriceScheduled {
     private PriceMapper priceMapper;
     private static final SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+//    @Scheduled(cron = "0 0/1 * * * ?")
     public void scheduled() throws FileNotFoundException, IllegalAccessException {
         long currentTimeMillis = System.currentTimeMillis();
         log.info("=====>>>>>开始导出...  {}", format.format(currentTimeMillis));

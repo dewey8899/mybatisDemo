@@ -65,6 +65,7 @@ public class Lambda {
     public void orElseThrowble() {
         User user2 = null;
         User result = Optional.ofNullable(user2).orElseThrow(() -> new BusinessException("数据为空"));
+        System.out.println(result);
     }
 
     private User createNewUser() {
@@ -78,7 +79,7 @@ public class Lambda {
         Integer value2 = 10;
         Optional<Integer> a = Optional.ofNullable(value1);
         Optional<Integer> b = Optional.of(value2);
-        System.out.println(b.orElse(getDefaultValue())); // 调用getDefaultValue
+        System.out.println(b.orElse(getDefaultValue())); // 不调用getDefaultValue
         System.out.println(a.orElse(getDefaultValue())); // 调用getDefaultValue
         System.out.println(b.orElseGet(() -> getDefaultValue())); // 不调用getDefaultValue
         System.out.println(a.orElseGet(() -> getDefaultValue())); // 调用getDefaultValue
