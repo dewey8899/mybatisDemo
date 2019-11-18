@@ -1,13 +1,7 @@
 package com.system.scheduled;
 
-import com.system.entity.TBReport;
-import com.system.entity.TBSservice;
-import com.system.mapper.ServiceMapper;
 import com.system.mapper.price.PriceMapper;
-import com.system.service.ReportService;
-import com.system.utils.BigDecimalUtils;
 import com.system.utils.excel.ExcelUtils;
-import com.system.vo.ReportExportOutVo;
 import com.system.vo.price.CustomerProfileVo;
 import com.system.vo.price.PriceExportOutVo;
 import com.system.vo.price.PriceVo;
@@ -22,11 +16,9 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -66,8 +58,8 @@ public class PriceScheduled {
             CustomerProfileVo vo1 = customerMap.get(internal_12);
             CustomerProfileVo vo2 = customerMap.get(internal_13);
             //如果vo1不是空，则执行lambda表达式v ->updatePrice(allVos, priceBatchCode, entitySubCode, v)
+            //表达式中的 v 代表判断的对象  vo1 或者 vo2
             Optional.ofNullable(vo1).ifPresent(v ->updatePrice(allVos, priceBatchCode, entitySubCode, v));
-            //如果vo2不是空，则执行lambda表达式v ->updatePrice(allVos, priceBatchCode, entitySubCode, v)
             Optional.ofNullable(vo2).ifPresent(v -> updatePrice(allVos, priceBatchCode, entitySubCode, v));
         }
         String fileName = String.format("价格数据.xlsx");
