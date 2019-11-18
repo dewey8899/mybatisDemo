@@ -147,6 +147,18 @@
             <version>1.3.2</version>
         </dependency>
 
+        <!--redis集成-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -227,6 +239,8 @@
         <spring.version>4.3.18.RELEASE</spring.version>
         <slf4j.version>1.7.25</slf4j.version>
         <org.projectlombok.version>1.18.0</org.projectlombok.version>
+        <sdr.version>2.1.9.RELEASE</sdr.version> <!-- spring data redis -->
+        <jedis>2.9.1</jedis>
     </properties>
 
 </project>
