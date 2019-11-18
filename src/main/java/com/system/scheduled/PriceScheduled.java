@@ -47,10 +47,10 @@ public class PriceScheduled {
     private PriceMapper priceMapper;
     private static final SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+//    @Scheduled(cron = "0 0/1 * * * ?")
     public void scheduled() throws FileNotFoundException, IllegalAccessException {
         long currentTimeMillis = System.currentTimeMillis();
-        log.info("=====>>>>>开始导出...  {}", format.format(currentTimeMillis));
+        log.info("》》》》开始导出...  {}", format.format(currentTimeMillis));
         CustomerProfileVo vo = new CustomerProfileVo();
 //        vo.setId(100L);
         List<CustomerProfileVo> customerList = priceMapper.getCustomerList( vo);

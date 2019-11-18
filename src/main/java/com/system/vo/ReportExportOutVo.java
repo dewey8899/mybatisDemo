@@ -2,8 +2,10 @@ package com.system.vo;
 
 import com.system.utils.excel.Column;
 import lombok.Data;
+import lombok.ToString;
 import org.apache.poi.ss.usermodel.Cell;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -11,7 +13,8 @@ import java.math.BigDecimal;
  * Date on 2019/8/23 13:22
  */
 @Data
-public class ReportExportOutVo {
+@ToString
+public class ReportExportOutVo implements Serializable {
     @Column(index = 0, type = Cell.CELL_TYPE_STRING, title = "总代编号", width = 30 * 100)
     private String agencyCode;
 
