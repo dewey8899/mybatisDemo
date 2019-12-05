@@ -47,7 +47,7 @@ public class ReportOemProductDifferenceScheduled {
     private ReportOemProductDifferenceMapper reportOemProductDifferenceMapper;
     private static final SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void scheduled() throws FileNotFoundException {
         long currentTimeMillis = System.currentTimeMillis();
         List<ReportOemProductDifferenceSearchOutDto> outDtos = new ArrayList<>();
