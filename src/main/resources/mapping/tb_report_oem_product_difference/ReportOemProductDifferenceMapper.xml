@@ -50,7 +50,6 @@
     </select>
     <select id="listReplenishes" parameterType="map" resultMap="BaseResultMap">
 
-
         SELECT general_agency_entity_internal_code,t1.service_business_entity_internal_code,sum(t1.quantity) as replenish_quantity ,
                t1.service_business_entity_company_short_name, material_number , product_name ,
                CASE WHEN sum(quantity) = 0 THEN 0 ELSE round(SUM(quantity * service_business_tax_excluded_price) / SUM(quantity), 2)

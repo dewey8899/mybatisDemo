@@ -8,6 +8,8 @@ import org.junit.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -17,7 +19,7 @@ import static org.junit.Assert.*;
  * Date on 2019/8/28 13:55
  */
 @Slf4j
-public class Lambda {
+public class OptionalLambda {
     public static void main(String[] args) {
 
         String user = null;
@@ -87,22 +89,23 @@ public class Lambda {
 
     @Test
     public void lambda() {
-//        List car = new ArrayList();
-//        car.add("a");
-//        car.add("b");
-//        car.forEach(s -> {
-//            System.out.println(s);
-//        });
-//
-//        Map<String, String> map = null;
-//        map.forEach((k, v) -> {
-//            System.out.println(k);
-//        });
         List<User> userList = new ArrayList<>();
+        List<User2> userList2 = new ArrayList<>();
         userList.add(new User("123@qq.com", "dewey"));
         userList.add(new User("123456@qq.com", "456dewey"));
-        Set<User> collect = userList.stream().filter(p -> p.getEmail().equals("1238@qq.com")).collect(Collectors.toSet());
-        System.out.println(collect.size());
+        userList2.add(new User2(23, "dewey"));
+        userList2.add(new User2(26, "456dewey"));
+//        Set<User> collect = userList.stream().filter(p -> p.getEmail().equals("1238@qq.com")).collect(Collectors.toSet());
+//        System.out.println(collect.size());
+        Map<String, User2> user2Map = userList2.stream().collect(Collectors.toMap(User2::getUsername, Function.identity()));
+        Consumer<User> userConsumer = s -> {
+            User2 user2 = user2Map.get(s.getUsername());
+            Consumer<User2> user2Consumer = user21 -> s.setAge(user21.getAge());
+            Optional.ofNullable(user2).ifPresent(user2Consumer);
+            System.out.println(s);
+        };
+        userList.forEach(userConsumer);
+
     }
 
     public static Integer getDefaultValue() {
@@ -114,7 +117,7 @@ public class Lambda {
 class User {
     private String email;
     private String username;
-
+    private Integer age;
     public User() {
 
     }
@@ -128,6 +131,30 @@ class User {
     public String toString() {
         return "User{" +
                 "email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", age='" + age + '\'' +
+                '}';
+    }
+}
+
+@Data
+class User2 {
+    private Integer age;
+    private String username;
+
+    public User2() {
+
+    }
+
+    public User2(Integer age, String username) {
+        this.age = age;
+        this.username = username;
+    }
+
+    @Override
+    public String toString() {
+        return "User2{" +
+                "age='" + age + '\'' +
                 ", username='" + username + '\'' +
                 '}';
     }
