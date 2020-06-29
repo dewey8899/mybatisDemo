@@ -1,7 +1,6 @@
 package test;
 
 import com.system.Application;
-import com.system.config.Person;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import test.design.patterns.proxy.Person;
 
 /**
  * Created by deweydu

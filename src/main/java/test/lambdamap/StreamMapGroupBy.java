@@ -20,7 +20,7 @@ public class StreamMapGroupBy {
                 new Item("papaya", 20, new BigDecimal("9.99")),
                 new Item("apple", 10, new BigDecimal("9.99")),
                 new Item("banana", 10, new BigDecimal("19.99")),
-                new Item("apple", 20, new BigDecimal("9.99"))
+                new Item("apple", 10, new BigDecimal("9.99"))
         );
 
         //根据名字分组计数
