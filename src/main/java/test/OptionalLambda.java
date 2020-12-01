@@ -42,7 +42,7 @@ public class OptionalLambda {
         User user = null;
         User user2 = new User("anna@gmail.com", "1234");
         User result = Optional.ofNullable(user).orElse(user2);
-        User result2 = Optional.ofNullable(user).orElseGet(() -> user2);
+        User result2 = Optional.ofNullable(user).orElse(user2);
         assertEquals(user2.getEmail(), result.getEmail());
         System.out.println(true);
         System.out.println(result2);
